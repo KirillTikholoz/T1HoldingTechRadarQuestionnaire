@@ -3,9 +3,7 @@ server:
 
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/TechRadar # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     url: jdbc:postgresql://db:5432/TechRadar
-    #    url: jdbc:postgresql://host.docker.internal:5432/Students
     username: postgres
     password: Kirill2305
     driver-class-name: org.postgresql.Driver
