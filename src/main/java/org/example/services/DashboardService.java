@@ -21,17 +21,12 @@ public class DashboardService {
     private final TechnologyRepository technologyRepository;
     private static final String CATEGORY_PLUG = "CATEGORY_PLUG";
     private static final String SECTION_PLUG = "SECTION_PLUG";
-    public Dashboard createDashboard(long tech_id){
-        Optional<Technology> optionalFoundTechnology = technologyRepository.findById(tech_id);
+    public Dashboard createDashboard(long techId){
+        Optional<Technology> optionalFoundTechnology = technologyRepository.findById(techId);
         Technology foundTechnology = optionalFoundTechnology.orElseThrow(() ->
-                new TechnologyNotFoundException("Technology not found for ID: " + tech_id));
+                new TechnologyNotFoundException("Technology not found for ID: " + techId));
 
-        Map<String, Integer> votes = new HashMap<>();
-        List<Poll> polls = pollRepository.findLastVotes(foundTechnology);
-        for (Poll poll: polls){
-            String key = poll.getRing().getName();
-            votes.put(key, votes.getOrDefault(key, 0) + 1);
-        }
+        Map<String, Integer> votes = findVotes(foundTechnology);
 
         return new Dashboard(foundTechnology.getId(),
                 foundTechnology.getName(),
@@ -39,5 +34,16 @@ public class DashboardService {
                 SECTION_PLUG,
                 foundTechnology.getRing().getName(),
                 votes);
+    }
+
+    private Map<String, Integer> findVotes(Technology technology){
+        Map<String, Integer> votes = new HashMap<>();
+        List<Poll> polls = pollRepository.findLastVotes(technology);
+        for (Poll poll: polls){
+            String key = poll.getRing().getName();
+            votes.put(key, votes.getOrDefault(key, 0) + 1);
+        }
+
+        return votes;
     }
 }
